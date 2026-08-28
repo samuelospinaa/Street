@@ -1,0 +1,546 @@
+{
+  "restaurante": {
+    "nombre": "Street Fries",
+    "eslogan": "Made on the Street - Thinking big",
+    "redes_sociales": {
+      "instagram": "@streetfriescol",
+      "facebook": "@streetfriescol",
+      "tiktok": "@streetfriescol"
+    },
+    "historia": "Todo comenzó en noviembre de 2020, cuando Pablo decidió traer los sabores de las calles más icónicas del mundo y convertirlos en papas con identidad propia. Empezó en un local de 15m2, con una visión clara y muchas ganas de hacerlo diferente. Así nació Street Fries. Hoy mueven más de 20 toneladas de papa al mes, generan empleo y están en un plan de expansión que no se detiene.",
+    "moneda": "COP"
+  },
+  "salsas": {
+    "salsas_tradicionales": [
+      {
+        "id": "salsa-roja",
+        "nombre": "Roja (Ketchup)"
+      },
+      {
+        "id": "salsa-mayonesa",
+        "nombre": "Mayonesa"
+      },
+      {
+        "id": "salsa-rosada",
+        "nombre": "Rosada"
+      },
+      {
+        "id": "salsa-mostaza",
+        "nombre": "Mostaza"
+      },
+      {
+        "id": "salsa-pina",
+        "nombre": "Piña"
+      },
+      {
+        "id": "salsa-ajo",
+        "nombre": "Ajo"
+      }
+    ],
+    "salsas_del_chef": [
+      {
+        "id": "salsa-sriracha",
+        "nombre": "Mayonesa Sriracha"
+      },
+      {
+        "id": "salsa-bbq-tamarindo",
+        "nombre": "BBQ Tamarindo"
+      },
+      {
+        "id": "salsa-chipotle",
+        "nombre": "Mayonesa Chipotle"
+      },
+      {
+        "id": "salsa-cilantro",
+        "nombre": "Mayonesa Cilantro"
+      },
+      {
+        "id": "salsa-relish",
+        "nombre": "Mayonesa Relish"
+      }
+    ],
+    "salsas_disponibles": [
+      {
+        "id": "salsa-ahumada",
+        "nombre": "Salsa Ahumada"
+      },
+      {
+        "id": "salsa-miel-mostaza",
+        "nombre": "Miel Mostaza"
+      },
+      {
+        "id": "salsa-bbq-dulce",
+        "nombre": "BBQ Dulce"
+      },
+      {
+        "id": "salsa-bbq-picante",
+        "nombre": "BBQ Picante"
+      },
+      {
+        "id": "salsa-bbq-citrica",
+        "nombre": "BBQ Cítrica"
+      },
+      {
+        "id": "salsa-dulce-maiz",
+        "nombre": "Dulce Maíz"
+      },
+      {
+        "id": "salsa-sriracha-2",
+        "nombre": "Sriracha"
+      }
+    ]
+  },
+  "producto_destacado": {
+    "id": "toston-de-queso",
+    "nombre": "Tostón de Queso",
+    "marca": "The Original Tostón",
+    "descripcion": "Producto insignia de la marca: adición de queso fundido estilo tostón para las papas.",
+    "eslogan": "Si vienes a Street Fries y no pides Tostón de queso... no viniste",
+    "opciones": [
+      {
+        "id": "toston-simple",
+        "nombre": "Adición simple",
+        "precio_cop": 7900
+      },
+      {
+        "id": "toston-entocinetado",
+        "nombre": "Entocinetado (con tocineta)",
+        "precio_adicional_cop": 1900,
+        "precio_total_cop": 9800
+      }
+    ]
+  },
+  "categorias": {
+    "entrada": [
+      {
+        "id": "mozzarella-sticks",
+        "nombre": "Mozzarella Sticks",
+        "cantidad": "4 unidades",
+        "descripcion": "Con coulis artesanal de la casa.",
+        "precio_cop": 15900
+      }
+    ],
+    "signature_dishes": [
+      {
+        "id": "fries-via-nassa",
+        "nombre": "Fries Vía Nassa",
+        "subtitulo": "Papas Suizas",
+        "descripcion": "Papas premium crujientes acompañadas de queso mozzarella, salchicha suiza signature, salsa de queso cheddar, picadillo de cilantro, cebolla caramelizada y salsas artesanales Andalouse y Mayonesa Relish.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Salchicha suiza signature",
+          "Salsa de queso cheddar",
+          "Picadillo de cilantro",
+          "Cebolla caramelizada"
+        ]
+      },
+      {
+        "id": "fries-oxford-street",
+        "nombre": "Fries Oxford Street",
+        "subtitulo": "Receta de chorizo del Chef",
+        "descripcion": "Papas premium crujientes acompañadas de queso mozzarella, chorizo auténtico llanero, salsa artesanal de Mayonesa Chipotle y BBQ Tamarindo, guacamole artesanal, queso crema, cebolla caramelizada y picadillo de cilantro.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Chorizo auténtico llanero",
+          "Guacamole artesanal",
+          "Queso crema",
+          "Cebolla caramelizada",
+          "Picadillo de cilantro"
+        ]
+      },
+      {
+        "id": "fries-broadway",
+        "nombre": "Fries Broadway",
+        "subtitulo": "Mixtas del Chef",
+        "descripcion": "Papas premium crujientes, acompañadas de queso crema, salsa artesanal de Mayonesa Chipotle, pollo desmechado en salsa Mayonesa Cilantro, pulled beef en salsa BBQ Tamarindo y cebolla encurtida.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso crema",
+          "Pollo desmechado",
+          "Pulled beef",
+          "Cebolla encurtida"
+        ]
+      },
+      {
+        "id": "fries-las-vegas-strip",
+        "nombre": "Fries Las Vegas Strip",
+        "subtitulo": "Toque de queda",
+        "descripcion": "Papas premium crujientes con una mezcla de queso mozzarella y salsa de queso cheddar, con salsa artesanal de Mayonesa Relish, trocitos de pechuga apanada en salsa honey, tocineta ahumada, salchicha Zenú.",
+        "salsas_recomendadas": [
+          "Mayonesa Cilantro",
+          "BBQ dulce"
+        ],
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Salsa de queso cheddar",
+          "Pechuga apanada en salsa honey",
+          "Tocineta ahumada",
+          "Salchicha Zenú"
+        ]
+      },
+      {
+        "id": "fries-caminito",
+        "nombre": "Fries Caminito",
+        "subtitulo": "Papas Argentinas",
+        "descripcion": "Papas premium crujientes acompañadas de queso mozzarella, chorizo argentino con nuestro chimichurri artesanal, pulled beef con salteado de pimentón y cebolla y salsa artesanal Brasa Dulce.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Chorizo argentino con chimichurri",
+          "Pulled beef",
+          "Salteado de pimentón y cebolla"
+        ]
+      },
+      {
+        "id": "fries-ocean-drive",
+        "nombre": "Fries Ocean Drive",
+        "subtitulo": "Las Vegas del Chef",
+        "descripcion": "Papas premium crujientes, acompañadas de queso mozzarella, salsa artesanal de Mayonesa Sriracha y Mayonesa Relish, trocitos de pechuga apanados en salsa honey, tocineta ahumada, salchicha Zenú, pico de gallo artesanal y cebolla caramelizada.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Pechuga apanada en salsa honey",
+          "Tocineta ahumada",
+          "Salchicha Zenú",
+          "Pico de gallo artesanal",
+          "Cebolla caramelizada"
+        ]
+      }
+    ],
+    "fries_especiales": [
+      {
+        "id": "fries-savoy-court",
+        "nombre": "Fries Savoy Court",
+        "subtitulo": "Inglesas",
+        "descripcion": "Papas premium crujientes con una mezcla de queso parmesano, queso mozzarella, salsa de queso cheddar.",
+        "salsas_recomendadas": [
+          "Maíz dulce",
+          "BBQ cítrica"
+        ],
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso parmesano",
+          "Queso mozzarella",
+          "Salsa de queso cheddar"
+        ]
+      },
+      {
+        "id": "fries-via-venetto",
+        "nombre": "Fries Via Venetto",
+        "subtitulo": "Romanas",
+        "descripcion": "Papas premium crujientes con una mezcla de queso mozzarella, tocineta ahumada, doritos triturados y salsa de tocineta y queso.",
+        "salsas_recomendadas": [
+          "BBQ cítrica",
+          "Mayonesa Cilantro"
+        ],
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Tocineta ahumada",
+          "Doritos triturados",
+          "Salsa de tocineta y queso"
+        ]
+      },
+      {
+        "id": "fries-rodeo-driver",
+        "nombre": "Fries Rodeo Driver",
+        "subtitulo": "Mezcla de quesos",
+        "descripcion": "Papas premium crujientes con una mezcla de queso mozzarella y salsa de queso cheddar, sour cream artesanal, trocitos de pechuga apanada bañada en salsa honey, tocineta ahumada, maicitos.",
+        "salsas_recomendadas": [
+          "Miel mostaza",
+          "BBQ dulce"
+        ],
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Salsa de queso cheddar",
+          "Sour cream artesanal",
+          "Pechuga apanada en salsa honey",
+          "Tocineta ahumada",
+          "Maicitos"
+        ]
+      },
+      {
+        "id": "fries-royal-mile",
+        "nombre": "Fries Royal Mile",
+        "subtitulo": "De la casa / Pulled Beef",
+        "descripcion": "Papas premium crujientes con una mezcla de queso mozzarella, Pulled Beef en salsa Sweet Onion Garlic, tocineta ahumada.",
+        "salsas_recomendadas": [
+          "Mayonesa Cilantro",
+          "Salsa ahumada",
+          "BBQ dulce"
+        ],
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Pulled beef",
+          "Tocineta ahumada"
+        ]
+      },
+      {
+        "id": "fries-bourbon-street",
+        "nombre": "Fries Bourbon Street",
+        "subtitulo": "Pulled Pork",
+        "descripcion": "Papas premium crujientes con una mezcla de queso mozzarella, Pulled Pork en salsa Sweet Onion Garlic, tocineta ahumada.",
+        "salsas_recomendadas": [
+          "Mayonesa Cilantro",
+          "Salsa ahumada"
+        ],
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Pulled pork",
+          "Tocineta ahumada"
+        ]
+      }
+    ],
+    "fries_tradicionales": [
+      {
+        "id": "fries-solo-papas",
+        "nombre": "Fries Solo Papas",
+        "descripcion": "Papas premium crujientes con queso mozzarella y huevos de codorniz.",
+        "precio_cop": 28900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Huevos de codorniz"
+        ]
+      },
+      {
+        "id": "fries-salchipapas",
+        "nombre": "Fries Salchipapas",
+        "descripcion": "Papas premium crujientes con salchicha y huevos de codorniz.",
+        "precio_cop": 28900,
+        "ingredientes": [
+          "Salchicha",
+          "Huevos de codorniz"
+        ]
+      },
+      {
+        "id": "fries-eliseos",
+        "nombre": "Fries Eliseos",
+        "subtitulo": "Tradicionales",
+        "descripcion": "Papas premium crujientes con bombom de pollo, arepa y tortas de pollo.",
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Bombom de pollo",
+          "Arepa",
+          "Tortas de pollo"
+        ]
+      },
+      {
+        "id": "fries-orchard-road",
+        "nombre": "Fries Orchard Road",
+        "subtitulo": "Veg",
+        "descripcion": "Papas premium crujientes con queso mozzarella, maicitos, queso cheddar, guacamole artesanal, pico de gallo y salsas de la casa.",
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Maicitos",
+          "Queso cheddar",
+          "Guacamole artesanal",
+          "Pico de gallo"
+        ]
+      },
+      {
+        "id": "fries-wall-street",
+        "nombre": "Fries Wall Street",
+        "subtitulo": "Americanas",
+        "descripcion": "Papas premium crujientes con queso mozzarella, queso cheddar, salchicha, tocineta ahumada y salsas de la casa.",
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Queso cheddar",
+          "Salchicha",
+          "Tocineta ahumada"
+        ]
+      },
+      {
+        "id": "fries-hollywood",
+        "nombre": "Fries Hollywood",
+        "subtitulo": "Rancheras",
+        "descripcion": "Papas premium crujientes con queso mozzarella, tocineta ahumada, salchicha ranch, maicitos, sour cream artesanal y salsas de la casa.",
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Tocineta ahumada",
+          "Salchicha ranch",
+          "Maicitos",
+          "Sour cream artesanal"
+        ]
+      },
+      {
+        "id": "fries-la-rambla",
+        "nombre": "Fries La Rambla",
+        "subtitulo": "Carne",
+        "descripcion": "Papas premium crujientes con queso mozzarella, carne desmechada, guacamole artesanal, pico de gallo y salsas de la casa.",
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Carne desmechada",
+          "Guacamole artesanal",
+          "Pico de gallo"
+        ]
+      },
+      {
+        "id": "fries-kao-san",
+        "nombre": "Fries Kao San",
+        "subtitulo": "Pollo",
+        "descripcion": "Papas premium crujientes con queso mozzarella, pollo desmechado, guacamole, pico de gallo y salsas de la casa.",
+        "precio_cop": 33900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Pollo desmechado",
+          "Guacamole",
+          "Pico de gallo"
+        ]
+      },
+      {
+        "id": "fries-abbey-road",
+        "nombre": "Fries Abbey Road",
+        "subtitulo": "Mixtas",
+        "descripcion": "Papas premium crujientes con queso mozzarella, pollo desmechado, carne desmechada, guacamole, pico de gallo y salsas de la casa.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Pollo desmechado",
+          "Carne desmechada",
+          "Guacamole",
+          "Pico de gallo"
+        ]
+      },
+      {
+        "id": "fries-lombard-street",
+        "nombre": "Fries Lombard Street",
+        "descripcion": "Papas premium crujientes con queso mozzarella, trocitos de pechuga apanada bañada en salsa honey, tocineta ahumada y salsas de la casa.",
+        "precio_cop": 34900,
+        "ingredientes": [
+          "Queso mozzarella",
+          "Pechuga apanada en salsa honey",
+          "Tocineta ahumada"
+        ]
+      }
+    ],
+    "adiciones": [
+      {
+        "id": "adicion-papas",
+        "nombre": "Adición de papas",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-salchicha-ranch",
+        "nombre": "Salchicha ranch",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-tocineta-ahumada",
+        "nombre": "Tocineta ahumada",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-mozzarella",
+        "nombre": "Mozzarella cheese",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-bombom-pollo",
+        "nombre": "Bombom de pollo",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-pollo-desmechado",
+        "nombre": "Pollo desmechado",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-carne-desmechada",
+        "nombre": "Carne desmechada",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-maicitos",
+        "nombre": "Maicitos",
+        "precio_cop": 7200
+      },
+      {
+        "id": "adicion-tortas-pollo",
+        "nombre": "Tortas de pollo",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-guacamole",
+        "nombre": "Guacamole artesanal",
+        "precio_cop": 7200
+      },
+      {
+        "id": "adicion-pollo-honey",
+        "nombre": "Pollo en salsa honey",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-cheddar",
+        "nombre": "Cheddar cheese",
+        "precio_cop": 6500
+      },
+      {
+        "id": "adicion-huevos-codorniz",
+        "nombre": "Huevos de codorniz",
+        "precio_cop": 6500
+      },
+      {
+        "id": "adicion-pico-de-gallo",
+        "nombre": "Pico de gallo",
+        "precio_cop": 6500
+      },
+      {
+        "id": "adicion-sour-cream",
+        "nombre": "Sour cream",
+        "precio_cop": 6500
+      },
+      {
+        "id": "adicion-pulled-beef",
+        "nombre": "Pulled Beef en salsa Sweet Onion",
+        "precio_cop": 7500
+      },
+      {
+        "id": "adicion-pulled-pork",
+        "nombre": "Pulled Pork en salsa Sweet Onion",
+        "precio_cop": 7500
+      }
+    ],
+    "bebidas": [
+      {
+        "id": "postobon-manzana",
+        "nombre": "Postobón Manzana",
+        "categoria": "Postobón",
+        "precio_cop": 3500
+      },
+      {
+        "id": "postobon-uva",
+        "nombre": "Postobón Uva",
+        "categoria": "Postobón",
+        "precio_cop": 3500
+      },
+      {
+        "id": "postobon-pepsi",
+        "nombre": "Pepsi",
+        "categoria": "Postobón",
+        "precio_cop": 3500
+      },
+      {
+        "id": "postobon-naranjada",
+        "nombre": "Naranjada Postobón",
+        "categoria": "Postobón",
+        "precio_cop": 3500
+      },
+      {
+        "id": "postobon-colombiana",
+        "nombre": "Colombiana",
+        "categoria": "Postobón",
+        "precio_cop": 3500
+      }
+    ]
+  }
+}

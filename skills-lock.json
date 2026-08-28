@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "journey-map": {
+      "source": "owl-listener/designer-skills",
+      "sourceType": "github",
+      "skillPath": "design-research/skills/journey-map/SKILL.md",
+      "computedHash": "2c0747f5598df3f062f7e0c88de941bba65275995e6030a66fb47e4bd51ba153"
+    }
+  }
+}

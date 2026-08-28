@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-carbon text-white antialiased;
+    /* El negro nunca es plano: viñeta sutil hacia #1a1a1a. */
+    background-image:
+      radial-gradient(120% 80% at 50% -10%, #1f1f1f 0%, #121212 38%, #0b0b0b 72%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    @apply bg-amber text-carbon;
+  }
+
+  input,
+  textarea {
+    @apply bg-carbon-soft/80 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30;
+    @apply focus:outline-none focus:border-amber/70 focus:ring-1 focus:ring-amber/40 transition;
+  }
+}
+
+@layer components {
+  /* Textura tipo papel kraft / deli-wrap del empaque, replicada en CSS.
+     No usamos patron-papel.jpg: a tamaño completo se pixela. */
+  .textura-papel {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .textura-papel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23r)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  .textura-papel-fuerte::before {
+    opacity: 0.11;
+  }
+
+  .titulo {
+    @apply font-display uppercase tracking-wide leading-[0.92];
+  }
+
+  /* Separador de sección: regla con la misma textura del empaque. */
+  .separador {
+    height: 1px;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(247, 168, 24, 0.55) 15%,
+      rgba(255, 255, 255, 0.14) 50%,
+      rgba(247, 168, 24, 0.55) 85%,
+      transparent
+    );
+  }
+
+  .tarjeta {
+    @apply relative rounded-2xl border border-white/10 bg-carbon-soft/60 backdrop-blur-[2px];
+    @apply transition-colors duration-200;
+  }
+
+  .tarjeta:hover {
+    @apply border-white/20;
+  }
+
+  .chip {
+    @apply rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 select-none;
+  }
+
+  .chip-off {
+    @apply border-white/15 text-white/70 hover:border-white/40 hover:text-white;
+  }
+
+  .chip-on {
+    @apply border-amber bg-amber text-carbon font-semibold;
+  }
+
+  .chip-bloqueado {
+    @apply border-white/5 text-white/20 cursor-not-allowed;
+  }
+
+  .btn-amber {
+    @apply rounded-xl bg-amber px-5 py-3 font-semibold text-carbon transition;
+    @apply hover:brightness-110 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply rounded-xl border border-white/15 px-4 py-2.5 text-sm text-white/80 transition;
+    @apply hover:border-white/40 hover:text-white active:scale-[0.98];
+  }
+
+  /* La mascota viene recortada de la carta con fondo negro y restos de texto
+     a la derecha: la encuadramos y difuminamos el borde para que flote. */
+  .mascota-mask {
+    -webkit-mask-image: radial-gradient(58% 52% at 46% 40%, #000 30%, rgba(0, 0, 0, 0.35) 68%, transparent 88%);
+    mask-image: radial-gradient(58% 52% at 46% 40%, #000 30%, rgba(0, 0, 0, 0.35) 68%, transparent 88%);
+  }
+}
+
+/* El carrito fijo no debe tapar el final del contenido. */
+.pb-carrito {
+  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+}
