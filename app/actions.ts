@@ -16,6 +16,18 @@ const ERROR_GENERICO =
   'No pudimos registrar tu pedido. Revisa tu conexión e inténtalo de nuevo — si el problema sigue, escríbenos directamente por WhatsApp.'
 
 export async function createOrder(payload: OrderPayload): Promise<CreateOrderResult> {
+  // Cualquier fallo inesperado (red del cliente, timeout de Supabase, etc.) se
+  // atrapa acá: sin este try/catch, una excepción no controlada en una server
+  // action tumba toda la página en vez de mostrar el mensaje de error normal.
+  try {
+    return await crearPedido(payload)
+  } catch (error) {
+    console.error('[createOrder] excepción no controlada:', error)
+    return { ok: false, error: ERROR_GENERICO }
+  }
+}
+
+async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
   const { cliente, lineas } = payload
 
   // 1. Validación

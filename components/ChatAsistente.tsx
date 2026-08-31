@@ -65,11 +65,11 @@ export function ChatAsistente() {
     }
   }
 
-  const posicion = lineas.length > 0 ? 'bottom-24' : 'bottom-5'
+  const posicion = lineas.length > 0 ? 'bottom-20 sm:bottom-24' : 'bottom-4 sm:bottom-5'
 
   if (!abierto) {
     return (
-      <div className={`fixed left-4 z-30 transition-all ${posicion}`}>
+      <div className={`fixed left-3 z-30 transition-all sm:left-4 ${posicion}`}>
         <button
           type="button"
           onClick={() => setAbierto(true)}
@@ -77,11 +77,13 @@ export function ChatAsistente() {
           className="group relative block transition active:scale-95"
         >
           <Sticker rotacion={-6}>
-            {/* Mismo ancho que el botón circular de antes (64px); el alto sigue
-                la proporción real de la foto (907×2550) para mostrar a Liberty
-                completa, sin recortarla ni dejar espacio vacío alrededor. */}
+            {/* Más chico en móvil (44px, tamaño táctil mínimo recomendado) para
+                que estorbe menos; en desktop conserva el ancho original (64px).
+                El alto sigue la proporción real de la foto (907×2550) para
+                mostrar a Liberty completa, sin recortarla ni dejar espacio
+                vacío alrededor. */}
             <span
-              className="block w-16 overflow-hidden rounded-[1.75rem] ring-2 ring-amber/70 shadow-sticker transition group-hover:ring-amber"
+              className="block w-11 overflow-hidden rounded-2xl ring-2 ring-amber/70 shadow-sticker transition group-hover:ring-amber sm:w-16 sm:rounded-[1.75rem]"
               style={{ aspectRatio: '907 / 2550' }}
             >
               <span className="relative block h-full w-full">
@@ -97,9 +99,9 @@ export function ChatAsistente() {
             </span>
           </Sticker>
 
-          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4">
+          <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3 sm:h-4 sm:w-4">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber opacity-75" />
-            <span className="relative inline-flex h-4 w-4 rounded-full bg-amber ring-2 ring-carbon" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-amber ring-2 ring-carbon sm:h-4 sm:w-4" />
           </span>
         </button>
       </div>

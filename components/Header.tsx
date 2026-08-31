@@ -54,21 +54,11 @@ export function Header({ seccionActiva }: { seccionActiva?: Seccion }) {
         </p>
 
         <div className="mt-7 flex flex-wrap items-center gap-2.5">
-          <a href="#menu" className="btn-amber text-sm uppercase tracking-wider">
-            Ver el menú
-          </a>
-
-          <Link
-            href="/#menu"
-            className={`chip ${!seccionActiva ? 'chip-on' : 'chip-off'}`}
-          >
-            Todas las papas
-          </Link>
           {FILTROS_PAPAS.map(({ key, etiqueta }) => (
             <Link
               key={key}
               href={`/?seccion=${key}#menu`}
-              className={`chip ${seccionActiva === key ? 'chip-on' : 'chip-off'}`}
+              className={`chip flex min-w-[7.5rem] items-center justify-center text-center ${seccionActiva === key ? 'chip-on' : 'chip-off'}`}
             >
               {etiqueta}
             </Link>

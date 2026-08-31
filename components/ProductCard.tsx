@@ -422,11 +422,11 @@ export function ProductCard({
           role="dialog"
           aria-modal="true"
           aria-labelledby={`upsell-toston-${item.id}`}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 py-8"
           onClick={() => agregar()}
         >
           <div
-            className="tarjeta textura-papel w-full max-w-sm overflow-hidden"
+            className="tarjeta textura-papel my-auto max-h-full w-full max-w-sm overflow-y-auto overflow-x-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {tostonSimple.imagen_url && (
