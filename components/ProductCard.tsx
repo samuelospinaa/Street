@@ -422,7 +422,7 @@ export function ProductCard({
           role="dialog"
           aria-modal="true"
           aria-labelledby={`upsell-toston-${item.id}`}
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 py-8"
+          className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/70 p-4 py-8"
           onClick={() => agregar()}
         >
           <div
@@ -471,14 +471,9 @@ export function ProductCard({
                   onClick={() => agregar([TOSTON_ENTOCINETADO_ID])}
                   className="mt-2.5 flex w-full flex-col gap-1 rounded-xl border border-amber/50 bg-amber/10 px-4 py-3 text-left text-sm transition hover:border-amber/70 hover:bg-amber/15"
                 >
-                  <span className="flex items-center justify-between">
-                    <span className="font-semibold">Tostón Entocinetado</span>
-                    <span className="font-display text-amber">
-                      +{formatCOP(Number(tostonEntocinetado.precio_cop))}
-                    </span>
-                  </span>
+                  <span className="font-semibold">Tostón Entocinetado</span>
                   <span className="text-xs text-amber/80">
-                    Por solo +{formatCOP(TOSTON_ENTOCINETADO_EXTRA)} más llévalo con tocineta
+                    Por solo +{formatCOP(TOSTON_ENTOCINETADO_EXTRA)} más lo llevas con tocineta
                   </span>
                 </button>
               )}
