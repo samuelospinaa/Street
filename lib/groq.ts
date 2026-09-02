@@ -37,7 +37,11 @@ export async function pedirRespuestaGroq(mensajes: MensajeChat[]): Promise<strin
     body: JSON.stringify({
       model: MODELO_ASISTENTE,
       messages: mensajes,
-      temperature: 0.5,
+      // Bajo: el asistente responde sobre datos concretos del menú (ingredientes,
+      // precios) y recomienda cruzando esos datos con lo que pide el cliente —
+      // no es texto creativo, así que menos temperatura reduce que invente o
+      // mezcle ingredientes de platos distintos.
+      temperature: 0.3,
       max_tokens: 400,
       // gpt-oss es un modelo "razonador": sin esto gasta buena parte del
       // presupuesto de tokens pensando en vez de respondiendo, y con
