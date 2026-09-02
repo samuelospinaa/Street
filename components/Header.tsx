@@ -54,15 +54,22 @@ export function Header({ seccionActiva }: { seccionActiva?: Seccion }) {
         </p>
 
         <div className="mt-7 flex flex-wrap items-center gap-2.5">
-          {FILTROS_PAPAS.map(({ key, etiqueta }) => (
-            <Link
-              key={key}
-              href={`/?seccion=${key}#menu`}
-              className={`chip flex min-w-[7.5rem] items-center justify-center text-center ${seccionActiva === key ? 'chip-on' : 'chip-off'}`}
-            >
-              {etiqueta}
-            </Link>
-          ))}
+          {FILTROS_PAPAS.map(({ key, etiqueta }) => {
+            const activo = seccionActiva === key
+            // Tocar el filtro ya activo lo quita (vuelve a ver todo el menú)
+            // en vez de quedarse pegado — es la única forma de deseleccionar
+            // ahora que no hay un botón aparte de "Todas las papas".
+            return (
+              <Link
+                key={key}
+                href={activo ? '/#menu' : `/?seccion=${key}#menu`}
+                aria-pressed={activo}
+                className={`chip flex min-w-[7.5rem] items-center justify-center text-center ${activo ? 'chip-on' : 'chip-off'}`}
+              >
+                {etiqueta}
+              </Link>
+            )
+          })}
         </div>
       </div>
 
