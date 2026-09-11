@@ -7,6 +7,7 @@ import { EditorLinea } from './EditorLinea'
 import { useCart } from '@/lib/cart-context'
 import { construirAdiciones } from '@/lib/menu'
 import { contarItems, formatCOP, subtotalCarrito, totalLinea } from '@/lib/pricing'
+import { SEDES, SEDE_POR_DEFECTO, type SedeId } from '@/lib/sedes'
 import { SECCIONES_CON_PAPAS, type MenuItem, type Salsa, type TipoEntrega } from '@/lib/types'
 
 type OrderFormProps = {
@@ -30,6 +31,7 @@ export function OrderForm({ items, salsas }: OrderFormProps) {
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
   const [telefonoAlterno, setTelefonoAlterno] = useState('')
+  const [sedeId, setSedeId] = useState<SedeId>(SEDE_POR_DEFECTO)
   const [tipoEntrega, setTipoEntrega] = useState<TipoEntrega>('domicilio')
   const [direccion, setDireccion] = useState('')
   const [unidad, setUnidad] = useState('')
@@ -78,6 +80,7 @@ export function OrderForm({ items, salsas }: OrderFormProps) {
       nombre: nombre.trim(),
       telefono: telefono.trim(),
       telefonoAlterno: telefonoAlterno.trim(),
+      sedeId,
       tipoEntrega,
       direccion: esDomicilio ? direccion.trim() : '',
       unidad: esDomicilio ? unidad.trim() : '',
@@ -159,6 +162,29 @@ export function OrderForm({ items, salsas }: OrderFormProps) {
 
       <div className="grid gap-4 lg:grid-cols-[1fr_22rem]">
         <form onSubmit={enviar} className="tarjeta flex flex-col gap-4 p-5 md:p-6">
+          <div>
+            <span className="text-xs uppercase tracking-wider text-white/50">
+              Sede <span className="text-amber">*</span>
+            </span>
+            <div className="mt-1.5 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {SEDES.map((sede) => (
+                <button
+                  key={sede.id}
+                  type="button"
+                  onClick={() => setSedeId(sede.id)}
+                  aria-pressed={sedeId === sede.id}
+                  className={`rounded-xl border px-3 py-2.5 text-sm font-medium transition ${
+                    sedeId === sede.id
+                      ? 'border-amber bg-amber/10 text-amber'
+                      : 'border-white/15 text-white/60 hover:border-white/30'
+                  }`}
+                >
+                  {sede.nombre}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <span className="text-xs uppercase tracking-wider text-white/50">Entrega</span>
             <div className="mt-1.5 grid grid-cols-2 gap-2">

@@ -9,6 +9,7 @@ import {
   subtotalCarrito,
   totalLinea,
 } from '@/lib/pricing'
+import { sedePorId } from '@/lib/sedes'
 import { buildOrderMessage, buildWaLink } from '@/lib/whatsapp'
 import type { AdicionSeleccionada, CartLine, CreateOrderResult, OrderPayload } from '@/lib/types'
 
@@ -40,9 +41,13 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
   if (!nombre) return { ok: false, error: 'Necesitamos tu nombre para el pedido.' }
   if (esDomicilio && !direccion) return { ok: false, error: 'Necesitamos una dirección de entrega.' }
 
-  const numeroRestaurante = process.env.NEXT_PUBLIC_RESTAURANT_WHATSAPP
-  if (!numeroRestaurante) {
-    return { ok: false, error: 'El número de WhatsApp del restaurante no está configurado.' }
+  // El cliente solo manda el id de la sede — igual que los precios, el número
+  // de WhatsApp al que se manda el pedido se resuelve acá contra la lista
+  // fija de sedes, nunca se confía en un número que venga del navegador.
+  const sede = sedePorId(cliente.sedeId)
+  if (!sede) return { ok: false, error: 'Elige la sede a la que quieres mandar el pedido.' }
+  if (!sede.whatsapp) {
+    return { ok: false, error: 'El WhatsApp de esa sede no está configurado todavía.' }
   }
 
   let supabase
@@ -138,6 +143,8 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
 
   const { error: errorOrden } = await supabase.from('orders').insert({
     id: orderId,
+    sede_id: sede.id,
+    sede_nombre: sede.nombre,
     cliente_nombre: nombre,
     cliente_telefono: cliente.telefono?.trim() || null,
     cliente_telefono_alterno: cliente.telefonoAlterno?.trim() || null,
@@ -183,12 +190,13 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
     cliente: { ...cliente, nombre, direccion },
     subtotal,
     orderId,
+    sedeNombre: sede.nombre,
   })
 
   return {
     ok: true,
     orderId,
     subtotal,
-    waUrl: buildWaLink(numeroRestaurante, mensaje),
+    waUrl: buildWaLink(sede.whatsapp, mensaje),
   }
 }

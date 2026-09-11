@@ -6,6 +6,7 @@ export type MensajePedido = {
   cliente: DatosCliente
   subtotal: number
   orderId: string
+  sedeNombre: string
 }
 
 function linkMaps(lat: number, lng: number): string {
@@ -16,12 +17,13 @@ function linkMaps(lat: number, lng: number): string {
  * Arma el mensaje que el cliente enviará por WhatsApp. El cajero debe poder
  * leerlo de arriba a abajo y solo confirmar precio final y tiempo de entrega.
  */
-export function buildOrderMessage({ lineas, cliente, subtotal, orderId }: MensajePedido): string {
+export function buildOrderMessage({ lineas, cliente, subtotal, orderId, sedeNombre }: MensajePedido): string {
   const esDomicilio = cliente.tipoEntrega !== 'recoger'
   const bloques: string[] = []
 
   bloques.push('*NUEVO PEDIDO — STREET FRIES*')
   bloques.push(`Pedido #${orderId.slice(0, 8).toUpperCase()}`)
+  bloques.push(`Sede: ${sedeNombre}`)
   bloques.push('')
   bloques.push('*PEDIDO*')
 

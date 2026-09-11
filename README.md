@@ -49,12 +49,16 @@ Llena `.env.local` con:
 
 | Variable | Dónde sacarla |
 |---|---|
-| `NEXT_PUBLIC_RESTAURANT_WHATSAPP` | El WhatsApp del restaurante, **solo dígitos con indicativo**: `573001234567` |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API → `anon` `public` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` |
 | `GROQ_API_KEY` | [console.groq.com](https://console.groq.com) → API Keys — la usa el asistente del chat (`/api/asistente`) |
 | `GROQ_MODEL` | Opcional. Modelo de Groq a usar; por defecto `openai/gpt-oss-120b` (ver [`lib/groq.ts`](lib/groq.ts)) |
+
+El WhatsApp de cada sede ya no es una env var: son 5 locales, así que sus números viven en
+[`lib/sedes.ts`](lib/sedes.ts) (campo `whatsapp` de cada `Sede`, mismo formato de antes: solo dígitos con
+indicativo, ej. `573001234567`). El cliente elige la sede en `/pedido`; el servidor valida ese id contra
+esta lista antes de armar el link de WhatsApp — nunca confía en un número que venga del navegador.
 
 > La `service_role` da acceso total a la base. Solo se usa localmente para el seed: **no va a Vercel y no se
 > commitea.** `GROQ_API_KEY` es distinta: no es pública (no lleva `NEXT_PUBLIC_`), pero sí corre en el
@@ -95,7 +99,6 @@ No hay suite de tests en este proyecto.
 1. Sube el repo a GitHub e impórtalo en [vercel.com](https://vercel.com) (**New Project**). Vercel detecta
    Next.js solo.
 2. En **Settings → Environment Variables** agrega:
-   - `NEXT_PUBLIC_RESTAURANT_WHATSAPP`
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `GROQ_API_KEY` (para el asistente del chat)

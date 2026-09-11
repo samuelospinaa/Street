@@ -1,3 +1,5 @@
+import type { SedeId } from "./sedes";
+
 export type Seccion =
   | "producto_destacado"
   | "entrada"
@@ -56,6 +58,7 @@ export type DatosCliente = {
   nombre: string;
   telefono: string;
   telefonoAlterno: string;
+  sedeId: SedeId;
   tipoEntrega: TipoEntrega;
   direccion: string;
   unidad: string;
