@@ -2,9 +2,12 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react'
 import { createOrder } from '@/app/actions'
-import type { AdicionSeleccionada, CartLine, CreateOrderResult, DatosCliente } from './types'
+import type { AdicionSeleccionada, CartLine, CreateOrderResult, DatosCliente, UltimoPedido } from './types'
 
 const CLAVE_STORAGE = 'street-fries-carrito-v1'
+// Sobrevive al vaciado del carrito tras confirmar, para poder ofrecer
+// "pedir lo mismo de siempre" la próxima vez — por navegador, no hay cuentas.
+const CLAVE_ULTIMO_PEDIDO = 'street-fries-ultimo-pedido-v1'
 
 /** Dos líneas se funden solo si son el mismo producto con las mismas salsas,
  *  adiciones e ingredientes quitados. */
@@ -29,6 +32,8 @@ type CartContextValue = {
   editarLinea: (lineId: string, cambios: CambiosLinea) => void
   confirmar: (cliente: DatosCliente) => void
   nuevoPedido: () => void
+  ultimoPedido: UltimoPedido | null
+  repetirUltimoPedido: () => void
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
@@ -43,6 +48,7 @@ const CartContext = createContext<CartContextValue | null>(null)
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lineas, setLineas] = useState<CartLine[]>([])
   const [resultado, setResultado] = useState<CreateOrderResult | null>(null)
+  const [ultimoPedido, setUltimoPedido] = useState<UltimoPedido | null>(null)
   const [hidratado, setHidratado] = useState(false)
   const [enviando, iniciarEnvio] = useTransition()
 
@@ -52,6 +58,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (guardado) setLineas(JSON.parse(guardado))
     } catch {
       // localStorage no disponible o el dato guardado está corrupto: seguimos con carrito vacío.
+    }
+    try {
+      const guardado = window.localStorage.getItem(CLAVE_ULTIMO_PEDIDO)
+      if (guardado) setUltimoPedido(JSON.parse(guardado))
+    } catch {
+      // Sin "pedido de siempre" guardado, simplemente no se ofrece la opción.
     }
     setHidratado(true)
   }, [])
@@ -133,7 +145,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         })
 
         setResultado(respuesta)
-        if (respuesta.ok) setLineas([])
+        if (respuesta.ok) {
+          const snapshot: UltimoPedido = {
+            lineas,
+            cliente: {
+              nombre: cliente.nombre,
+              telefono: cliente.telefono,
+              telefonoAlterno: cliente.telefonoAlterno,
+              sedeId: cliente.sedeId,
+              tipoEntrega: cliente.tipoEntrega,
+              direccion: cliente.direccion,
+              unidad: cliente.unidad,
+            },
+          }
+          setUltimoPedido(snapshot)
+          try {
+            window.localStorage.setItem(CLAVE_ULTIMO_PEDIDO, JSON.stringify(snapshot))
+          } catch {
+            // Sin persistencia no se podrá ofrecer "pedir lo mismo" luego, pero el pedido actual ya quedó guardado en Supabase.
+          }
+          setLineas([])
+        }
       })
     },
     [lineas],
@@ -144,9 +176,41 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setLineas([])
   }, [])
 
+  // Repone el carrito con las líneas del último pedido exitoso (ids de línea
+  // nuevos para no chocar con nada que quede en el carrito actual).
+  const repetirUltimoPedido = useCallback(() => {
+    if (!ultimoPedido) return
+    setResultado(null)
+    setLineas(ultimoPedido.lineas.map((linea, indice) => ({ ...linea, lineId: `repetir-${indice}-${Date.now()}` })))
+  }, [ultimoPedido])
+
   const value = useMemo<CartContextValue>(
-    () => ({ lineas, resultado, enviando, agregar, cambiarCantidad, eliminar, editarLinea, confirmar, nuevoPedido }),
-    [lineas, resultado, enviando, agregar, cambiarCantidad, eliminar, editarLinea, confirmar, nuevoPedido],
+    () => ({
+      lineas,
+      resultado,
+      enviando,
+      agregar,
+      cambiarCantidad,
+      eliminar,
+      editarLinea,
+      confirmar,
+      nuevoPedido,
+      ultimoPedido,
+      repetirUltimoPedido,
+    }),
+    [
+      lineas,
+      resultado,
+      enviando,
+      agregar,
+      cambiarCantidad,
+      eliminar,
+      editarLinea,
+      confirmar,
+      nuevoPedido,
+      ultimoPedido,
+      repetirUltimoPedido,
+    ],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

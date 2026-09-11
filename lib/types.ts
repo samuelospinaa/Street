@@ -82,7 +82,17 @@ export type OrderPayload = {
 
 export type CreateOrderResult =
   | { ok: true; orderId: string; waUrl: string; subtotal: number }
-  | { ok: false; error: string };
+  | { ok: false; error: string }
+
+/** Snapshot del último pedido confirmado con éxito, guardado en localStorage
+ *  para ofrecer "pedir lo mismo de siempre" — ver `lib/cart-context.tsx`. */
+export type UltimoPedido = {
+  lineas: CartLine[]
+  cliente: Pick<
+    DatosCliente,
+    'nombre' | 'telefono' | 'telefonoAlterno' | 'sedeId' | 'tipoEntrega' | 'direccion' | 'unidad'
+  >
+};
 
 export const SECCIONES_MENU: { key: Seccion; titulo: string; nota?: string }[] =
   [

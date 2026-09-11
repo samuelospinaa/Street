@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { EditorLinea } from './EditorLinea'
 import { useCart } from '@/lib/cart-context'
 import { construirAdiciones } from '@/lib/menu'
@@ -25,8 +25,18 @@ type EstadoUbicacion = 'idle' | 'cargando' | 'ok' | 'error'
  */
 export function OrderForm({ items, salsas }: OrderFormProps) {
   const router = useRouter()
-  const { lineas, resultado, enviando, cambiarCantidad, eliminar, editarLinea, agregar, confirmar, nuevoPedido } =
-    useCart()
+  const {
+    lineas,
+    resultado,
+    enviando,
+    cambiarCantidad,
+    eliminar,
+    editarLinea,
+    agregar,
+    confirmar,
+    nuevoPedido,
+    ultimoPedido,
+  } = useCart()
 
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
@@ -40,6 +50,19 @@ export function OrderForm({ items, salsas }: OrderFormProps) {
   const [estadoUbicacion, setEstadoUbicacion] = useState<EstadoUbicacion>('idle')
   const [errorLocal, setErrorLocal] = useState<string | null>(null)
   const [editandoLinea, setEditandoLinea] = useState<string | null>(null)
+
+  // Precompleta los datos del cliente con los del último pedido exitoso guardado
+  // en este navegador (ver `lib/cart-context.tsx`), sin pisar lo que ya haya escrito.
+  useEffect(() => {
+    if (!ultimoPedido) return
+    setNombre((actual) => actual || ultimoPedido.cliente.nombre)
+    setTelefono((actual) => actual || ultimoPedido.cliente.telefono)
+    setTelefonoAlterno((actual) => actual || ultimoPedido.cliente.telefonoAlterno)
+    setDireccion((actual) => actual || ultimoPedido.cliente.direccion)
+    setUnidad((actual) => actual || ultimoPedido.cliente.unidad)
+    setSedeId((actual) => (actual === SEDE_POR_DEFECTO ? ultimoPedido.cliente.sedeId : actual))
+    setTipoEntrega((actual) => (actual === 'domicilio' ? ultimoPedido.cliente.tipoEntrega : actual))
+  }, [ultimoPedido])
 
   const itemsPorId = useMemo(() => new Map(items.map((i) => [i.id, i])), [items])
   const adiciones = useMemo(() => construirAdiciones(items), [items])
