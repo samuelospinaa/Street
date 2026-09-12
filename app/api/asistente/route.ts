@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { construirContextoCarrito, construirContextoMenu, PROMPT_SISTEMA_BASE, type ResumenLineaCarrito } from '@/lib/asistente'
 import { ErrorLimiteGroq, pedirRespuestaGroq, type MensajeChat } from '@/lib/groq'
 import { cargarMenu } from '@/lib/menu'
+import { ipDesdeHeaders, limitarTasa } from '@/lib/rate-limit'
 
 // El asistente no necesita cachear/revalidar: cada request es una pregunta puntual.
 export const dynamic = 'force-dynamic'
@@ -11,6 +12,15 @@ export const dynamic = 'force-dynamic'
 // historial se mantiene corto para no comerse ese presupuesto en 2-3 turnos.
 const MAX_MENSAJES_HISTORIAL = 6
 const MAX_LARGO_MENSAJE = 500
+
+// Un solo cliente mandando mensajes en bucle puede agotar el presupuesto de
+// 8000 tokens/minuto de la cuenta de Groq (compartido entre todos los
+// visitantes) — este límite es tanto anti-abuso como protección del budget.
+const LIMITE_MENSAJES_POR_MINUTO = 8
+const VENTANA_MS = 60_000
+// El body normal (historial + carrito, ya recortados) no debería acercarse a
+// esto; un valor mucho mayor solo indica un intento de abuso.
+const MAX_BYTES_BODY = 20_000
 
 function limpiarHistorial(valor: unknown): MensajeChat[] {
   if (!Array.isArray(valor)) return []
@@ -52,6 +62,20 @@ function limpiarCarrito(valor: unknown): ResumenLineaCarrito[] {
 }
 
 export async function POST(request: Request) {
+  const ip = ipDesdeHeaders(request.headers)
+  const limite = limitarTasa(`asistente:${ip}`, LIMITE_MENSAJES_POR_MINUTO, VENTANA_MS)
+  if (!limite.permitido) {
+    return NextResponse.json(
+      { error: 'Estamos con mucho movimiento en el chat — espera unos segundos y vuelve a preguntar.' },
+      { status: 429, headers: { 'Retry-After': Math.ceil(limite.reintentarEnMs / 1000).toString() } },
+    )
+  }
+
+  const largoDeclarado = Number(request.headers.get('content-length') ?? '0')
+  if (largoDeclarado > MAX_BYTES_BODY) {
+    return NextResponse.json({ error: 'Solicitud demasiado grande.' }, { status: 413 })
+  }
+
   let cuerpo: unknown
   try {
     cuerpo = await request.json()

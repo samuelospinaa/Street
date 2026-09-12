@@ -1,5 +1,6 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { getSupabase } from '@/lib/supabase'
 import {
   TOSTON_ENTOCINETADO_EXTRA,
@@ -9,12 +10,29 @@ import {
   subtotalCarrito,
   totalLinea,
 } from '@/lib/pricing'
+import { ipDesdeHeaders, limitarTasa } from '@/lib/rate-limit'
 import { sedePorId } from '@/lib/sedes'
 import { buildOrderMessage, buildWaLink } from '@/lib/whatsapp'
 import type { AdicionSeleccionada, CartLine, CreateOrderResult, OrderPayload } from '@/lib/types'
 
 const ERROR_GENERICO =
   'No pudimos registrar tu pedido. Revisa tu conexión e inténtalo de nuevo — si el problema sigue, escríbenos directamente por WhatsApp.'
+
+// Frena scripts/bots insertando pedidos en bucle (spam en la base de datos y
+// en el chat de WhatsApp del local). Un cliente real no manda más de un par
+// de pedidos reales en 10 minutos.
+const LIMITE_PEDIDOS_POR_VENTANA = 5
+const VENTANA_PEDIDOS_MS = 10 * 60_000
+const ERROR_LIMITE_PEDIDOS =
+  'Ya registramos varios pedidos desde tu conexión hace poco. Espera unos minutos e inténtalo de nuevo, o escríbenos directo por WhatsApp.'
+
+// Topes de tamaño para los campos de texto libre: nada de esto necesita ser
+// largo, y sin tope un cliente (o un bot) podría insertar filas gigantes en
+// `orders`/`order_items` o mensajes de WhatsApp absurdamente largos.
+const MAX_LARGO = { nombre: 80, telefono: 20, direccion: 300, unidad: 60, notas: 500 } as const
+const MAX_LINEAS_PEDIDO = 40
+const MAX_ADICIONES_POR_LINEA = 20
+const MAX_INGREDIENTES_QUITADOS_POR_LINEA = 20
 
 export async function createOrder(payload: OrderPayload): Promise<CreateOrderResult> {
   // Cualquier fallo inesperado (red del cliente, timeout de Supabase, etc.) se
@@ -29,13 +47,33 @@ export async function createOrder(payload: OrderPayload): Promise<CreateOrderRes
 }
 
 async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
-  const { cliente, lineas } = payload
+  // 0. Rate limit por IP — antes de tocar la base de datos.
+  const ip = ipDesdeHeaders(headers())
+  const limite = limitarTasa(`pedido:${ip}`, LIMITE_PEDIDOS_POR_VENTANA, VENTANA_PEDIDOS_MS)
+  if (!limite.permitido) return { ok: false, error: ERROR_LIMITE_PEDIDOS }
+
+  const { cliente, lineas: lineasCrudas } = payload
+  const lineas = lineasCrudas.slice(0, MAX_LINEAS_PEDIDO)
 
   // 1. Validación
-  const nombre = cliente.nombre?.trim() ?? ''
+  const nombre = (cliente.nombre?.trim() ?? '').slice(0, MAX_LARGO.nombre)
   const tipoEntrega = cliente.tipoEntrega === 'recoger' ? 'recoger' : 'domicilio'
   const esDomicilio = tipoEntrega === 'domicilio'
-  const direccion = esDomicilio ? (cliente.direccion?.trim() ?? '') : ''
+  const direccion = esDomicilio ? (cliente.direccion?.trim() ?? '').slice(0, MAX_LARGO.direccion) : ''
+  const telefono = (cliente.telefono?.trim() ?? '').slice(0, MAX_LARGO.telefono)
+  const telefonoAlterno = (cliente.telefonoAlterno?.trim() ?? '').slice(0, MAX_LARGO.telefono)
+  const unidad = esDomicilio ? (cliente.unidad?.trim() ?? '').slice(0, MAX_LARGO.unidad) : ''
+  const notas = (cliente.notas?.trim() ?? '').slice(0, MAX_LARGO.notas)
+  // Coordenadas fuera de rango (o no numéricas) se descartan en vez de fallar
+  // todo el pedido: la dirección escrita sigue siendo válida sin ubicación.
+  const lat =
+    esDomicilio && typeof cliente.lat === 'number' && Number.isFinite(cliente.lat) && Math.abs(cliente.lat) <= 90
+      ? cliente.lat
+      : null
+  const lng =
+    esDomicilio && typeof cliente.lng === 'number' && Number.isFinite(cliente.lng) && Math.abs(cliente.lng) <= 180
+      ? cliente.lng
+      : null
 
   if (lineas.length === 0) return { ok: false, error: 'Tu pedido está vacío.' }
   if (!nombre) return { ok: false, error: 'Necesitamos tu nombre para el pedido.' }
@@ -60,7 +98,9 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
   // 2. Los precios se recalculan contra la base: nunca se confía en los que
   //    manda el navegador (la anon key es pública).
   const idsProductos = Array.from(new Set(lineas.map((l) => l.menuItemId)))
-  const idsAdiciones = Array.from(new Set(lineas.flatMap((l) => l.adicionIds)))
+  const idsAdiciones = Array.from(
+    new Set(lineas.flatMap((l) => l.adicionIds.slice(0, MAX_ADICIONES_POR_LINEA))),
+  )
   const idsConsulta = Array.from(
     new Set([...idsProductos, ...idsAdiciones.filter((id) => id !== TOSTON_ENTOCINETADO_ID)]),
   )
@@ -91,7 +131,7 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
     const cantidad = Math.min(Math.max(Math.trunc(linea.cantidad), 1), 50)
 
     const adiciones: AdicionSeleccionada[] = []
-    for (const idAdicion of linea.adicionIds) {
+    for (const idAdicion of linea.adicionIds.slice(0, MAX_ADICIONES_POR_LINEA)) {
       // El "entocinetado" no es una fila de menu_items: es el tostón de queso
       // + este cargo extra, ofrecido como adición dentro de cualquier plato
       // de papas (ya no solo dentro de la tarjeta del tostón, que se quitó).
@@ -117,7 +157,9 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
     // Solo se aceptan como "quitados" ingredientes que de verdad son base del
     // plato: lo que mande el navegador se valida contra `menu_items.ingredientes`.
     const ingredientesBase: string[] = producto.ingredientes ?? []
-    const ingredientesQuitados = linea.ingredientesQuitados.filter((i) => ingredientesBase.includes(i))
+    const ingredientesQuitados = linea.ingredientesQuitados
+      .slice(0, MAX_INGREDIENTES_QUITADOS_POR_LINEA)
+      .filter((i) => ingredientesBase.includes(i))
 
     lineasResueltas.push({
       lineId: `${linea.menuItemId}-${indice}`,
@@ -146,14 +188,14 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
     sede_id: sede.id,
     sede_nombre: sede.nombre,
     cliente_nombre: nombre,
-    cliente_telefono: cliente.telefono?.trim() || null,
-    cliente_telefono_alterno: cliente.telefonoAlterno?.trim() || null,
+    cliente_telefono: telefono || null,
+    cliente_telefono_alterno: telefonoAlterno || null,
     tipo_entrega: tipoEntrega,
     direccion: esDomicilio ? direccion : null,
-    unidad: esDomicilio ? cliente.unidad?.trim() || null : null,
-    ubicacion_lat: esDomicilio ? cliente.lat : null,
-    ubicacion_lng: esDomicilio ? cliente.lng : null,
-    notas: cliente.notas?.trim() || null,
+    unidad: unidad || null,
+    ubicacion_lat: lat,
+    ubicacion_lng: lng,
+    notas: notas || null,
     subtotal,
   })
 
@@ -187,7 +229,7 @@ async function crearPedido(payload: OrderPayload): Promise<CreateOrderResult> {
   // 4. Solo con el pedido ya registrado se genera el link de WhatsApp.
   const mensaje = buildOrderMessage({
     lineas: lineasResueltas,
-    cliente: { ...cliente, nombre, direccion },
+    cliente: { ...cliente, nombre, direccion, telefono, telefonoAlterno, unidad, notas, lat, lng },
     subtotal,
     orderId,
     sedeNombre: sede.nombre,
