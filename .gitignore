@@ -17,3 +17,10 @@ next-env.d.ts
 *.tsbuildinfo
 CLAUDE.md
 .claude
+package-lock.json
+.eslintrc.json
+skills-lock.json
+street_fries_menu.json
+package.json
+tsconfig.json
+menu-images
