@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Anton, Inter } from 'next/font/google'
 import { ChatAsistente } from '@/components/ChatAsistente'
 import { CartProvider } from '@/lib/cart-context'
+import { URL_SITIO } from '@/lib/site'
 import './globals.css'
 
 const anton = Anton({
@@ -17,20 +18,28 @@ const inter = Inter({
   display: 'swap',
 })
 
-// En Vercel se resuelve solo con VERCEL_URL; en local cae a localhost.
-const urlSitio = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
-
 export const metadata: Metadata = {
-  metadataBase: new URL(urlSitio),
-  title: 'Street Fries — Pide en línea',
+  metadataBase: new URL(URL_SITIO),
+  title: 'Street Fries | Papas Artesanales a Domicilio en Sabaneta, Envigado y Florida',
   description:
-    'Made on the Street — Thinking big. Arma tu pedido de Street Fries y envíalo por WhatsApp en un toque.',
+    'Pide papas artesanales con preparaciones gourmet a domicilio en Sabaneta, Envigado, Florida y el sur del Valle de Aburrá. 6 sedes, pedido en línea, confirmación por WhatsApp.',
+  keywords: [
+    'papas a domicilio Sabaneta',
+    'papas artesanales Envigado',
+    'papas gourmet Medellín',
+    'salchipapas gourmet',
+    'papas con preparaciones',
+    'Tostón de Queso Street Fries',
+  ],
   openGraph: {
-    title: 'Street Fries — Pide en línea',
-    description: 'Made on the Street — Thinking big.',
+    title: 'Street Fries | Papas Artesanales a Domicilio',
+    description:
+      'Made on the Street — Thinking big. Papas gourmet con 6 sedes en el sur del Valle de Aburrá.',
     images: ['/images/fries-broadway.jpg'],
     type: 'website',
+    locale: 'es_CO',
   },
+  alternates: { canonical: URL_SITIO },
 }
 
 export const viewport: Viewport = {

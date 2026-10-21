@@ -1,6 +1,8 @@
 import { Header, Mascota } from '@/components/Header'
 import { OrderExperience } from '@/components/OrderExperience'
+import { PREGUNTAS_FRECUENTES, SchemaNegocio } from '@/components/SchemaNegocio'
 import { cargarMenu } from '@/lib/menu'
+import { SEDES } from '@/lib/sedes'
 import { FILTROS_PAPAS } from '@/lib/types'
 import menuJson from '@/street_fries_menu.json'
 
@@ -40,6 +42,38 @@ function SobreNosotros() {
           <p className="mt-5 text-sm text-white/45">
             {restaurante.redes_sociales.instagram} · Instagram · TikTok · Facebook
           </p>
+          <div className="mt-6 flex flex-wrap gap-6">
+            <EstadisticaDestacada valor="+20 ton" etiqueta="de papa servidas al mes" />
+            <EstadisticaDestacada valor={`${SEDES.length} sedes`} etiqueta="en el sur del Valle de Aburrá" />
+            <EstadisticaDestacada valor="2020" etiqueta="desde que abrimos el primer local" />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function EstadisticaDestacada({ valor, etiqueta }: { valor: string; etiqueta: string }) {
+  return (
+    <div>
+      <p className="titulo text-2xl text-amber">{valor}</p>
+      <p className="text-xs text-white/50">{etiqueta}</p>
+    </div>
+  )
+}
+
+function PreguntasFrecuentes() {
+  return (
+    <section className="mt-16">
+      <div className="tarjeta textura-papel p-6 md:p-10">
+        <h2 className="titulo text-3xl md:text-4xl">Preguntas frecuentes</h2>
+        <div className="mt-6 space-y-6">
+          {PREGUNTAS_FRECUENTES.map((p) => (
+            <div key={p.pregunta}>
+              <h3 className="text-base font-semibold text-white/90">{p.pregunta}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/60">{p.respuesta}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -58,6 +92,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <main className="pb-carrito">
+      <SchemaNegocio />
       <Header seccionActiva={seccionActiva} />
 
       <div className="mx-auto max-w-5xl px-5">
@@ -68,6 +103,7 @@ export default async function Page({ searchParams }: PageProps) {
         )}
 
         <SobreNosotros />
+        <PreguntasFrecuentes />
 
         <footer className="mt-16 border-t border-white/10 py-8 text-center text-xs text-white/35">
           <p className="titulo text-base text-white/60">{restaurante.nombre}</p>

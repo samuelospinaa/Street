@@ -54,6 +54,7 @@ Llena `.env.local` con:
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` |
 | `GROQ_API_KEY` | [console.groq.com](https://console.groq.com) → API Keys — la usa el asistente del chat (`/api/asistente`) |
 | `GROQ_MODEL` | Opcional. Modelo de Groq a usar; por defecto `openai/gpt-oss-120b` (ver [`lib/groq.ts`](lib/groq.ts)) |
+| `NEXT_PUBLIC_SITE_URL` | El dominio real en producción, `https://www.streetfries.online`. Sin esta, Open Graph/`sitemap.xml`/`robots.txt` caen al subdominio interno de Vercel (ver [`lib/site.ts`](lib/site.ts)) — debe agregarse en Vercel → Settings → Environment Variables |
 
 El WhatsApp de cada sede ya no es una env var: son 5 locales, así que sus números viven en
 [`lib/sedes.ts`](lib/sedes.ts) (campo `whatsapp` de cada `Sede`, mismo formato de antes: solo dígitos con
